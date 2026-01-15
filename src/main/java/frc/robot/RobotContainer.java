@@ -4,44 +4,55 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import frc.robot.subsystems.Traction;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.VelocidadeShooter;
 
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.Traction.AtivarTurbo;
+import frc.robot.commands.Traction.Controller;
 
 public class RobotContainer {
 
     /* ===== SUBSYSTEM ===== */
     private final Shooter shooter = new Shooter();
+    public final Traction traction = new Traction();
 
     /* ===== CONTROLE ===== */
-    private final XboxController xbox = new XboxController(0);
+    private final XboxController xbox1 = new XboxController(0);
+    private final XboxController xbox2 = new XboxController(1);
 
     /* ===== BOTÕES ===== */
+    private final JoystickButton btnTurbo = new JoystickButton(xbox1, 1);
+
     private final JoystickButton rb =
-            new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
+            new JoystickButton(xbox2, XboxController.Button.kRightBumper.value);
 
     private final JoystickButton lb =
-            new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
+            new JoystickButton(xbox2, XboxController.Button.kLeftBumper.value);
 
     private final JoystickButton btnA =
-            new JoystickButton(xbox, XboxController.Button.kA.value);
+            new JoystickButton(xbox2, XboxController.Button.kA.value);
 
     private final JoystickButton btnX =
-            new JoystickButton(xbox, XboxController.Button.kX.value);
+            new JoystickButton(xbox2, XboxController.Button.kX.value);
 
     private final JoystickButton btnB =
-            new JoystickButton(xbox, XboxController.Button.kB.value);
+            new JoystickButton(xbox2, XboxController.Button.kB.value);
 
     private final JoystickButton btnY =
-            new JoystickButton(xbox, XboxController.Button.kY.value);
+            new JoystickButton(xbox2, XboxController.Button.kY.value);
 
     public RobotContainer() {
         configureBindings();
+        traction.setDefaultCommand(
+        new Controller(traction, xbox1)
+    );
     }
 
     private void configureBindings() {
 
+        btnTurbo.onTrue(new AtivarTurbo(traction));
         /* ===== DIREÇÃO ===== */
         rb.onTrue(new AtivarFrenteShooter(shooter));
         lb.onTrue(new AtivarAtrasShooter(shooter));
